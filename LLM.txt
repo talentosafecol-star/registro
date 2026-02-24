@@ -1,0 +1,63 @@
+# Documentación LLM - Sistema de Autenticación
+
+## Propósito del Código
+Sistema de autenticación seguro con registro, login OTP y gestión de perfil para aplicación de reporte de incidentes de seguridad.
+
+## Stack Tecnológico
+- Next.js 14 (App Router)
+- TypeScript
+- Material UI v5
+- JWT + OTP
+
+## Archivos Principales
+
+### Componentes UI (SRP)
+- `src/components/auth/RegisterForm.tsx`: Formulario de registro con validación
+- `src/components/auth/LoginOTP.tsx`: Autenticación de dos factores
+- `src/components/auth/UserProfile.tsx`: Gestión de perfil de usuario
+
+### Servicios (OCP/DIP)
+- `src/services/auth/authService.ts`: Servicio principal de autenticación
+  - Extensible mediante inyección de dependencias
+  - Métodos: register, requestOTP, verifyOTP, logout, getProfile, updateProfile
+- `src/services/validation/validationService.ts`: Validaciones de entrada
+- `src/services/auth/IAuthService.ts`: Interfaces del servicio
+
+### Context
+- `src/context/AuthContext.tsx`: Proveedor de autenticación global
+
+### Páginas
+- `src/app/auth/page.tsx`: Página de autenticación
+- `src/app/profile/page.tsx`: Página de perfil
+
+## Patrones de Diseño
+
+### Inyección de Dependencias
+```typescript
+// El servicio acepta implementaciones de interfaces
+constructor(
+  provider: IAuthProvider,
+  tokenStorage: ITokenStorage,
+  notificationService: INotificationService,
+  securityLogger: ISecurityLogger
+)
+```
+
+### Extensibilidad (OCP)
+```typescript
+// Agregar nuevo proveedor sin modificar código existente
+authService.setProvider(new CustomAuthProvider());
+```
+
+## Dependencias Externas
+- @mui/material
+- @mui/icons-material
+- @emotion/react
+- @emotion/styled
+
+## Consideraciones de Seguridad
+- Tokens JWT con expiración corta
+- Refresh tokens para sesiones prolongadas
+- Rate limiting en endpoints
+- Sanitización de inputs
+- Logging de eventos sospechosos
